@@ -22,7 +22,7 @@ public class Main {
         catch(InputMismatchException e)
         {
             System.out.println(e);
-            System.out.println("enter integer only");
+            System.out.println("Enter integer only");
 
         }
         catch (NullPointerException e){
