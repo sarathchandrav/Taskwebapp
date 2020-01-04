@@ -9,26 +9,7 @@ public class Main {
     static TaskManager tm;
 
     public static void RepositoryType() throws SQLException,NullPointerException {
-        System.out.println(" 1)In Memory\n 2)File Repo\n 3)DataBase Repo");
-        Scanner sc = new Scanner(System.in);
-        int RepoType=0;
-        try {
-            RepoType = sc.nextInt();
-            if(RepoType > 3)
-            {
-                RepoType = 3;
-            }
-        }
-        catch(InputMismatchException e)
-        {
-            System.out.println(e);
-            System.out.println("Enter integer only");
 
-        }
-        catch (NullPointerException e){
-            System.out.println("e");
-            System.out.println("Enter the correct Repo");
-        }
         tm = new TaskManager();
     }
 
@@ -74,18 +55,23 @@ public class Main {
 
 
             } else if (selectTask == 3) {
-                System.out.println("Please Enter the name: ");
-                String deleteName = sc.next();
-                Print(tm.searchByName(deleteName));
-                //tm.searchByName(deleteName);
-                System.out.println("Enter the Id:");
-                int deleteId = sc.nextInt();
-                List<Task> IdSearchList = tm.searchById(deleteId);
-                for(Task object : IdSearchList) {
-                    if (object.id == (deleteId))
-                    {
-                        tm.deletTask(object.id);
+                try {
+                    System.out.println("Please Enter the name: ");
+                    String deleteName = sc.next();
+                    Print(tm.searchByName(deleteName));
+                    //tm.searchByName(deleteName);
+                    System.out.println("Enter the Id:");
+                    int deleteId = sc.nextInt();
+                    List<Task> IdSearchList = tm.searchById(deleteId);
+                    for (Task object : IdSearchList) {
+                        if (object.id == (deleteId)) {
+                            tm.deletTask(object.id);
+                        }
                     }
+                }
+                catch (InputMismatchException e)
+                {
+                    System.out.println("-------------------------\n------Data not found-----\n-------------------------");
                 }
 
 
@@ -131,9 +117,12 @@ public class Main {
             } else if (selectTask == 6) {
                 tm.sortDate();
 
+
             } else if (selectTask == 7) {
+               Print(tm.getPendingTask());
 
             } else if (selectTask == 8) {
+                Print(tm.getTodayTask());
 
             } else if (selectTask == 9) {
                 exit(1);

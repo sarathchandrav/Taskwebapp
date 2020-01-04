@@ -24,7 +24,7 @@ public interface TaskRepo {
     List<Task> searchByStatus(Status status) throws SQLException;
     Task changeStatus(String name, int Id, Status ModifiedStatus);
     void  sortDate();
-    List<Task> getPendingTask();
-    List<Task> getTodayTask();
+    List<Task> getPendingTask() throws SQLException;
+    List<Task> getTodayTask() throws SQLException;
 
 }

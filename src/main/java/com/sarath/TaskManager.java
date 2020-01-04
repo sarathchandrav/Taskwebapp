@@ -57,4 +57,11 @@ public class TaskManager {
         tr.sortDate();
     }
 
+    public List<Task> getPendingTask() throws SQLException {
+        return tr.getPendingTask();
+    }
+    public List<Task> getTodayTask() throws SQLException {
+        return tr.getTodayTask();
+    }
+
 }

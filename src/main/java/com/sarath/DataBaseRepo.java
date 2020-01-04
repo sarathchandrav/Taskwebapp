@@ -1,9 +1,12 @@
 package com.sarath;
 
+import sun.util.resources.LocaleData;
+
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 public class DataBaseRepo  implements TaskRepo {
 
@@ -77,9 +80,14 @@ public class DataBaseRepo  implements TaskRepo {
 
     @Override
     public void deletTask(int deleteId) throws SQLException {
-
+        try{
        String query = "delete from TaskTable where Id ="+deleteId+";";
        statement.executeUpdate(query);
+       System.out.println("---------deleted-------------------");}
+       catch (InputMismatchException e){
+            e.printStackTrace();
+            System.out.println("Data Not Found");
+       }
     }
 
     @Override
@@ -116,10 +124,10 @@ public class DataBaseRepo  implements TaskRepo {
     @Override
     public List<Task> searchByStatus(Status status) throws SQLException {
 
-        List<Task> nameSearchList = new ArrayList<Task>();
+
         ResultSet searchList = null;
         try {
-            String query = "select * from TaskTable where status like '"+status+"';";
+            String query = "select * from TaskTable where status in ('"+status+"');";
             searchList = statement.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -132,6 +140,7 @@ public class DataBaseRepo  implements TaskRepo {
         String query = "UPDATE TaskTable SET status= '"+status+"' WHERE Id="+Id+";";
         try {
             statement.executeUpdate(query);
+            System.out.println("--------------------\n---STATUS UPDATED---\n--------------------");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -143,6 +152,7 @@ public class DataBaseRepo  implements TaskRepo {
         String query = "SELECT * FROM TaskTable ORDER BY date DESC; ";
         try {
             ResultSet searchList = statement.executeQuery(query);
+            System.out.println("----------------DATA SORTED-------------------");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -150,13 +160,30 @@ public class DataBaseRepo  implements TaskRepo {
     }
 
     @Override
-    public List<Task> getPendingTask() {
-        return null;
+    public List<Task> getPendingTask()throws SQLException {
+
+        ResultSet searchList = null;
+        try {
+            String query = "select * from TaskTable where status in ('Initial','Inprocess');";
+            searchList = statement.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return GenerateList(searchList);
     }
 
     @Override
-    public List<Task> getTodayTask() {
-        return null;
+    public List<Task> getTodayTask() throws SQLException {
+        java.util.Date date = new java.util.Date();
+        System.out.println(date);
+        ResultSet searchList = null;
+        try{
+            String query = "select * from TaskTable where date < '"+date+"';";
+            searchList = statement.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return GenerateList(searchList);
     }
 
     public List<Task> GenerateList(ResultSet Rresultset) throws SQLException {
