@@ -50,17 +50,22 @@ public class FileSystemRepo implements TaskRepo {
 
 
     @Override
-    public Task addTask(String name, String date, String description, int Id) throws ParseException {
+    public void addTask(String name, int Id, String description, String date)  {
            // taskList = readFromFile();
 
             Task To = new Task();
             To.setName(name);
             To.setDescription(description);
             To.setId(Id);
+        try {
             To.setDate(format.parse(date));
-            taskList.add(To);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Enter the date in mensioned Formate");
+        }
+        taskList.add(To);
             writeToFile(taskList);
-            return To;
+
 
     }
 

@@ -11,10 +11,10 @@ public interface TaskRepo {
      * @param date
      * @param description
      * @param Id
-     * @return
+
      * @throws ParseException when date parameter is not a valida date
      */
-    Task addTask(String name, String date, String description, int Id) throws ParseException, SQLException;
+    void addTask(String name, int Id, String description, String date) throws ParseException, SQLException;
     List<Task> Display() throws SQLException, ParseException;
     Task updateTask(String description);
     void deletTask(int deleteId) throws SQLException;

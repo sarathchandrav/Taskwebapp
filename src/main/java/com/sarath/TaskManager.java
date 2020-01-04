@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TaskManager {
 
-    public TaskRepo tr;
+    private TaskRepo tr;
 
 
     public TaskManager() throws SQLException {
@@ -17,8 +17,12 @@ public class TaskManager {
 
 
 
-    public Task addTask(String name, int id, String description, String date) throws ParseException, SQLException {
-        return tr.addTask(name, date, description, id);
+    public void addTask(String name, int id, String description, String date) throws  SQLException {
+        try {
+            tr.addTask(name, id, description, date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Task> Display() throws SQLException, ParseException {

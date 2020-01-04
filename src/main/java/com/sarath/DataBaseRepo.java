@@ -5,32 +5,35 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 public class DataBaseRepo  implements TaskRepo {
 
-    static Connection connection;
-    static Statement statement;
+    Connection connection;
+    Statement statement;
 
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-    DataBaseRepo()  {
+    DataBaseRepo() throws SQLException {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb", "testuser", "password");
             statement = connection.createStatement();
         }
-        catch (SQLException| ClassNotFoundException e)
+        catch(ClassNotFoundException e)
         {
-            e.printStackTrace();
+            System.out.println(e);
         }
+
     }
 
+
     @Override
-    public Task addTask(String name, String date, String description, int Id) throws SQLException, ParseException {
+    public void addTask(String name, int Id , String description, String date) throws SQLException {
+
+
             Status status = Status.valueOf("Initial");
            String query = "insert into TaskTable values('"+name+"','"+description+"','"+Id+"','"+date+"','"+status+"')";
                statement.executeUpdate(query);
-        return null;
+
     }
 
     @Override

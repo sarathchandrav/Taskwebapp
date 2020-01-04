@@ -18,15 +18,18 @@ import java.util.*;
 
 public class Servlets extends HttpServlet {
 
-    public Servlets(){
+    public TaskManager tm;
+
+    public Servlets() throws SQLException {
+        tm = new TaskManager();
     }
-    TaskManager tm = null;
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException,NullPointerException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException,NullPointerException {
         PrintWriter out=resp.getWriter();
-        List<Task> List=new ArrayList<Task>();
+        List<Task> List=new ArrayList<>();
         try {
-            tm = new TaskManager();
+
             List=tm.Display();
         } catch (SQLException e) {
             out.println(e);
@@ -43,37 +46,64 @@ public class Servlets extends HttpServlet {
         out.println(js);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out=resp.getWriter();
-        try {
-            String name = req.getParameter("Name");
-            String dis = req.getParameter("Description");
-            //int Id = req.getParameter("Id");
-            Random random = new Random();
-            int id = random.nextInt(100);
 
-            String sdueDate = req.getParameter("Due Date in in (DD/MM/YYYY) format");
-            SimpleDateFormat sdfo = new SimpleDateFormat("dd/MM/yyyy");
-            Date dueDate = null;
-            dueDate = sdfo.parse(sdueDate);
-            Status st = Status.valueOf("Assigned");
-            Date dat = new Date();
-            tm.addTask(name,id,dis,sdueDate);
-            out.println("..........Added...........");
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        PrintWriter out=resp.getWriter();
+        List<Task> List=new ArrayList<>();
+        String name =req.getParameter("Name");
+        String Id =req.getParameter("Id");
+        int Taskid = Integer.parseInt(Id);
+        int flag=0;
+        try {
+           // taskManager = new TaskManager();
+            List= tm.searchByName(name);
         }
-        catch (NullPointerException e)
-        {
+        catch (SQLException e) {
             out.println(e);
-            out.println("You are not allowed to leave any of the fields empty");
         }
-        catch(ParseException p)
+        catch (Exception e) {
+            out.println(e);
+        }
+        for (Task obj : List) {
+            if (obj.id == Taskid) {
+                try {
+                    tm.deletTask(Taskid);
+                    out.println("......Deleted.......");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                flag++;
+            }
+        }
+        if(List.isEmpty()||flag==0)
         {
-            out.println(p);
-            out.println("Plz Provide Date in the mentioned format");
+            resp.setStatus(404);
+            out.println("Not Found");
+        }
+        resp.setStatus(202);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse resp) throws  IOException {
+        PrintWriter out=resp.getWriter();
+
+        String name = request.getParameter("Name");
+
+        Random random = new Random();
+        int id = random.nextInt(100);
+
+        String Description = request.getParameter("Description");
+        String Date = request.getParameter("Date");
+        try {
+            tm.addTask(name,id,Description,Date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        out.println(" "+name+" "+id+" "+Description+" "+Date);
+        out.println("--------------Data Added--------------------");
+
 
     }
 }
