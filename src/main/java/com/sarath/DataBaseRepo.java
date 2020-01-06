@@ -36,6 +36,7 @@ public class DataBaseRepo  implements TaskRepo {
             Status status = Status.valueOf("Initial");
            String query = "insert into TaskTable values('"+name+"','"+description+"','"+Id+"','"+date+"','"+status+"')";
                statement.executeUpdate(query);
+               System.out.println("----------Added----------");
 
     }
 
